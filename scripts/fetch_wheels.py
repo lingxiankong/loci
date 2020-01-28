@@ -14,15 +14,55 @@ except ImportError:
 
 DOCKER_REGISTRY='registry.hub.docker.com'
 
-def get_token(protocol, registry, repo):
+def get_authenticate_details(protocol, registry, repo):
+    # Make a request to the registry to read 'Www-Authenticate' header.
+    # Parse it for use as auth location and details.
+
+    # Check for known image registry.
     if registry == DOCKER_REGISTRY:
-      authserver = 'auth.docker.io'
-      service = 'registry.docker.io'
-    else:
-      authserver = "{}/v2".format(registry)
-      service =  registry.split(':')[0]
-    url = "{}://{}/token?service={}&" \
-            "scope=repository:{}:pull".format(protocol, authserver, service, repo)
+        auth_details = {
+            'realm': 'https://auth.docker.io/token',
+            'service': 'registry.docker.io',
+            'scope': 'repository:{repo}:pull'.format(repo=repo)
+        }
+        return auth_details
+
+    # Make a request for the latest image tag (Todo: just use real tag)
+    url = "{protocol}://{registry}/v2/{repo}/manifests/latest".format(
+                    protocol=protocol,
+                    registry=registry,
+                    repo=repo)
+
+    try:
+        req = urllib2.Request(url=url)
+        if strtobool(os.environ.get('REGISTRY_INSECURE', "False")):
+            resp = urllib2.urlopen(req, context=ssl._create_unverified_context())
+        else:
+            resp = urllib2.urlopen(req)
+    except urllib2.HTTPError as err:
+        # A 401 response is expected.
+        if err.code != 401:
+            return None
+
+        bearerauth = err.hdrs.get('Www-Authenticate', None)
+        preamble, tokens = bearerauth.split(' ')
+        auth_details = {}
+        for auth in tokens.split(','):
+            key, value = auth.split('=')[0:2]
+            auth_details[key] = value.strip('"')
+
+        return auth_details
+
+    return None
+
+
+def get_token(protocol, registry, repo):
+    auth_details = get_authenticate_details(protocol, registry, repo)
+
+    url = "{realm}?scope={scope}&service={service}".format(
+        realm=auth_details['realm'],
+        scope=auth_details['scope'],
+        service=auth_details['service'])
     print(url)
     try:
         r = urllib2.Request(url=url)
@@ -123,7 +163,7 @@ def main():
         data = get_wheels(wheels)
     else:
         registry, image, tag = parse_image(wheels)
-        if os.environ.get('REGISTRY_PROTOCOL') in ['http','https']:
+        if os.environ.get('REGISTRY_PROTOCOL') in ['http', 'https']:
             protocol = os.environ.get('REGISTRY_PROTOCOL')
         elif os.environ.get('REGISTRY_PROTOCOL') == 'detect':
             protocol = protocol_detection(registry)
@@ -147,4 +187,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
