@@ -12,9 +12,10 @@ except ImportError:
     # python3
     from urllib import request as urllib2
 
-DOCKER_REGISTRY='registry.hub.docker.com'
+DOCKER_REGISTRY = 'registry.hub.docker.com'
 
-def get_authenticate_details(protocol, registry, repo):
+
+def get_authenticate_details(protocol, registry, repo, tag):
     # Make a request to the registry to read 'Www-Authenticate' header.
     # Parse it for use as auth location and details.
 
@@ -27,11 +28,21 @@ def get_authenticate_details(protocol, registry, repo):
         }
         return auth_details
 
-    # Make a request for the latest image tag (Todo: just use real tag)
-    url = "{protocol}://{registry}/v2/{repo}/manifests/latest".format(
+    # A set of auth details that work for most Docker Registries.
+    default_auth_details = {
+        'realm': '{protocol}://{registry}/v2/token'.format(
+            protocol=protocol,
+            registry=registry),
+        'service': registry.split(':')[0],
+        'scope': 'repository:{repo}:pull'.format(repo=repo)
+    }
+
+    # Make a request for the image manifest and read details from the authentication header
+    url = "{protocol}://{registry}/v2/{repo}/manifests/{tag}".format(
                     protocol=protocol,
                     registry=registry,
-                    repo=repo)
+                    repo=repo,
+                    tag=tag)
 
     try:
         req = urllib2.Request(url=url)
@@ -40,9 +51,9 @@ def get_authenticate_details(protocol, registry, repo):
         else:
             resp = urllib2.urlopen(req)
     except urllib2.HTTPError as err:
-        # A 401 response is expected.
+        # A 401 response is expected. Otherwise, fall back to default auth location.
         if err.code != 401:
-            return None
+            return default_auth_details
 
         bearerauth = err.hdrs.get('Www-Authenticate', None)
         preamble, tokens = bearerauth.split(' ')
@@ -53,11 +64,12 @@ def get_authenticate_details(protocol, registry, repo):
 
         return auth_details
 
-    return None
+    # Manifests requests did not error, fall back to default auth.
+    return default_auth_details
 
 
-def get_token(protocol, registry, repo):
-    auth_details = get_authenticate_details(protocol, registry, repo)
+def get_token(protocol, registry, repo, tag):
+    auth_details = get_authenticate_details(protocol, registry, repo, tag)
 
     url = "{realm}?scope={scope}&service={service}".format(
         realm=auth_details['realm'],
@@ -75,6 +87,7 @@ def get_token(protocol, registry, repo):
     except urllib2.HTTPError as err:
         if err.reason == 'Not Found':
             return None
+
 
 def get_sha(repo, tag, registry, protocol, token):
     url = "{}://{}/v2/{}/manifests/{}".format(protocol, registry, repo, tag)
@@ -103,24 +116,26 @@ def get_blob(repo, tag, protocol, registry=DOCKER_REGISTRY, token=None):
         resp = urllib2.urlopen(r)
     return resp.read()
 
+
 def protocol_detection(registry, protocol='http'):
-    PROTOCOLS = ('http','https')
+    PROTOCOLS = ('http', 'https')
     index = PROTOCOLS.index(protocol)
     try:
         url = "{}://{}".format(protocol, registry)
         r = urllib2.Request(url)
         resp = urllib2.urlopen(r)
-    except (urllib2.URLError,urllib2.HTTPError) as err:
+    except (urllib2.URLError, urllib2.HTTPError) as err:
         if err.reason == 'Forbidden':
             return protocol
         elif index < len(PROTOCOLS) - 1:
             return protocol_detection(registry, PROTOCOLS[index + 1])
         else:
-            raise Exception("Cannot detect protocol for registry: {} due to error: {}".format(registry,err))
+            raise Exception("Cannot detect protocol for registry: {} due to error: {}".format(registry, err))
     except:
         raise
     else:
         return protocol
+
 
 def get_wheels(url):
     r = urllib2.Request(url=url)
@@ -129,6 +144,7 @@ def get_wheels(url):
     else:
         resp = urllib2.urlopen(r)
     return resp.read()
+
 
 def parse_image(full_image):
     slash_occurrences = len(re.findall('/',full_image))
@@ -148,6 +164,7 @@ def parse_image(full_image):
     else:
         tag = 'latest'
     return registry, repo+'/'+image if repo else image, tag
+
 
 def main():
     if 'WHEELS' in os.environ:
@@ -172,7 +189,7 @@ def main():
         kwargs = dict()
         if registry:
             kwargs.update({'registry': registry})
-        kwargs.update({'token': get_token(protocol, registry, image)})
+        kwargs.update({'token': get_token(protocol, registry, image, tag)})
         data = get_blob(image, tag, protocol, **kwargs)
 
     if 'WHEELS_DEST' in os.environ:
