@@ -1,0 +1,42 @@
+image: docker:latest
+
+variables:
+  DOCKER_DRIVER: overlay2
+  REGISTRY_IMAGE_BASE: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/loci-base
+  REGISTRY_IMAGE_REQUIREMENTS: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/loci-requirements
+
+
+services:
+- docker:dind
+
+before_script:
+  - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+
+stages:
+- build
+
+build:
+  stage: build
+  script:
+    # Build and push loci-base
+    - docker build dockerfiles/ubuntu_xenial
+       --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+
+    # Build requirements against each unique upper-constraints (for now just queens)
+    - docker build .
+       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+       --build-arg PROJECT=requirements
+       --build-arg PROJECT_REF=stable/queens
+       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_queens
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_queens
+
+    # TODO: Build the actual project image (probably from within each <project>-docker repo?)
+    #- docker build . \
+    # --build-arg FROM=loci-base:ubuntu_xenial \
+    # --build-arg WHEELS=gitlab.int.catalystcloud.nz:4567/catalystcloud/openstack-loci/requirements:queens_xenial \
+    # --build-arg PROJECT=heat \
+    # --build-arg PROJECT_REPO=https://gitlab.int.catalystcloud.nz/catalystcloud/heat.git \
+    # --build-arg PROJECT_REF=catalyst/stable/queens \
+    # --tag loci-catalystcloud-heat:ubuntu \
+    # --build-arg REGISTRY_PROTOCOL=https
