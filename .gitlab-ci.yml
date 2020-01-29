@@ -5,7 +5,6 @@ variables:
   REGISTRY_IMAGE_BASE: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/loci-base
   REGISTRY_IMAGE_REQUIREMENTS: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/loci-requirements
 
-
 services:
 - docker:dind
 
@@ -13,30 +12,93 @@ before_script:
   - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
 
 stages:
-- build
+- build_base
+- build_requirements
+- deploy
 
-build:
-  stage: build
+loci-base:
+  stage: build_base
   script:
     # Build and push loci-base
     - docker build dockerfiles/ubuntu_xenial
-       --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
     - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
 
-    # Build requirements against each unique upper-constraints (for now just queens)
+# Build requirements wheels for each Openstack release we use.
+# Ceilometer, Glance
+requirements_kilo:
+  stage: build_requirements
+  script:
     - docker build .
-       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-       --build-arg PROJECT=requirements
-       --build-arg PROJECT_REF=stable/queens
-       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_queens
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=kilo-eol
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_kilo
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_kilo
+
+# Neutron, Nova
+#requirements_liberty:
+#  stage: build_requirements
+#  script:
+#    - docker build .
+#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+#      --build-arg PROJECT=requirements
+#      --build-arg PROJECT_REF=liberty-eol
+#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_liberty
+#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_liberty
+
+# Cinder, Keystone, Swift
+requirements_mitaka:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=mitaka-eol
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_mitaka
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_mitaka
+
+# Heat, Octavia
+requirements_queens:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/queens
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_queens
     - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_queens
 
-    # TODO: Build the actual project image (probably from within each <project>-docker repo?)
-    #- docker build . \
-    # --build-arg FROM=loci-base:ubuntu_xenial \
-    # --build-arg WHEELS=gitlab.int.catalystcloud.nz:4567/catalystcloud/openstack-loci/requirements:queens_xenial \
-    # --build-arg PROJECT=heat \
-    # --build-arg PROJECT_REPO=https://gitlab.int.catalystcloud.nz/catalystcloud/heat.git \
-    # --build-arg PROJECT_REF=catalyst/stable/queens \
-    # --tag loci-catalystcloud-heat:ubuntu \
-    # --build-arg REGISTRY_PROTOCOL=https
+# Horizon, Trove
+#requirements_rocky:
+#  stage: build_requirements
+#  script:
+#    - docker build .
+#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+#      --build-arg PROJECT=requirements
+#      --build-arg PROJECT_REF=stable/rocky
+#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_rocky
+#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_rocky
+
+# Magnum, Aodh
+#requirements_stein:
+#  stage: build_requirements
+#  script:
+#    - docker build .
+#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+#      --build-arg PROJECT=requirements
+#      --build-arg PROJECT_REF=stable/stein
+#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_stein
+#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_stein
+
+# No projects.
+#requirements_train:
+#  stage: build_requirements
+#  script:
+#    - docker build .
+#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+#      --build-arg PROJECT=requirements
+#      --build-arg PROJECT_REF=stable/train
+#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_train
+#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:xenial_train
+
