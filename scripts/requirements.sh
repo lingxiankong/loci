@@ -34,20 +34,15 @@ sed -i '/trollius===2.1/d' /upper-constraints.txt
 
 # NOTE(dalees): Remove unused and unable to build packages from requirements
 # Kilo
-sed -i '/libvirt-python===1.2.16/d' /upper-constraints.txt
-sed -i '/cryptography===0.9.1/d' /upper-constraints.txt
+sed -i 's/cryptography===0.9.1/cryptography===1.2.3/' /upper-constraints.txt # Bump version to Mitaka
 # Liberty
-sed -i '/libvirt-python===1.3.0/d' /upper-constraints.txt # NOTE: needed for nova, ceilometer(5.3.0)
-sed -i '/cryptography===1.1.2/d' /upper-constraints.txt
+sed -i 's/cryptography===1.1.2/cryptography===1.2.3/' /upper-constraints.txt # Bump version to Mitaka
 sed -i '/aioeventlet===0.4/d' /upper-constraints.txt
 sed -i '/python-congressclient===2015.1.0/d' /upper-constraints.txt
 sed -i "/pysqlite===2.6.3;python_version=='2.7'/d" /upper-constraints.txt
 # Mitaka
 sed -i '/aioeventlet===0.5.1/d' /upper-constraints.txt # NOTE: used by ceilometer, nova
-sed -i '/libvirt-python===1.3.2/d' /upper-constraints.txt
 sed -i "/pysqlite===2.8.1;python_version=='2.7'/d" /upper-constraints.txt
-# Newton
-sed -i '/libvirt-python===2.1.0/d' /upper-constraints.txt
 
 # Ensure M2Crypto doesn't need to be built because it can't be built with
 # the default openssl devel distro packages for ubuntu/centos. (This is
