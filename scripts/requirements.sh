@@ -54,7 +54,7 @@ if [[ "${PYTHON3}" == "no" ]]; then
 fi
 
 # Remove any pylxd before 2.2.7 as the old versions cannot be built in CI.
-lxd_constraint=$(grep pylxd /upper-constraints.txt)
+lxd_constraint=$(grep pylxd /upper-constraints.txt | echo 0)
 # This removes (##) everything (*) from the lxd_constraint until the last =,
 # and removes all '.' to look like a number.
 if (( $(echo ${lxd_constraint##*=} | sed 's#\.##g') < 227 )); then
