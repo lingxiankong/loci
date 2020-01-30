@@ -39,82 +39,81 @@ requirements_kilo:
       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial
     - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial
 
-## Neutron, Nova
-#requirements_liberty:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=liberty-eol
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial
-#
-## Keystone, Swift
-#requirements_mitaka:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=mitaka-eol
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial
-#
-## Cinder(though codebase is Mitaka, see https://gerrit.dmz.wgtn.cat-it.co.nz/#/c/28399/)
-#requirements_newton:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=stable/newton
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial
-#
-## No projects: Ocata, Pike.
-#
-## Heat, Octavia
-#requirements_queens:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=stable/queens
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial
-#
-## Horizon, Trove
-#requirements_rocky:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=stable/rocky
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial
-#
-## Magnum, Aodh
-#requirements_stein:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=stable/stein
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
-#
-## No projects.
-#requirements_train:
-#  stage: build_requirements
-#  script:
-#    - docker build .
-#      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-#      --build-arg PROJECT=requirements
-#      --build-arg PROJECT_REF=stable/train
-#      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial
-#    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rain-ubuntu_xenial
-#
+# Neutron, Nova
+requirements_liberty:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=liberty-eol
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial
+
+# Keystone, Swift
+requirements_mitaka:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=mitaka-eol
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial
+
+# Cinder(though codebase is Mitaka, see https://gerrit.dmz.wgtn.cat-it.co.nz/#/c/28399/)
+requirements_newton:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/newton
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial
+
+# No projects: Ocata, Pike.
+
+# Heat, Octavia
+requirements_queens:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/queens
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial
+
+# Horizon, Trove
+requirements_rocky:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/rocky
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial
+
+# Magnum, Aodh
+requirements_stein:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/stein
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
+
+# No projects.
+requirements_train:
+  stage: build_requirements
+  script:
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/train
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rain-ubuntu_xenial
