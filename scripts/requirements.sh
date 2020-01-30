@@ -34,15 +34,21 @@ sed -i '/trollius===2.1/d' /upper-constraints.txt
 
 # NOTE(dalees): Remove unused and unable to build packages from requirements
 # Kilo
+sed -i 's/libvirt-python===1.2.16/libvirt-python===3.6.0/' /upper-constraints.txt # Match UCA repo Pike for package libvirt0
 sed -i 's/cryptography===0.9.1/cryptography===1.2.3/' /upper-constraints.txt # Bump version to Mitaka
 # Liberty
+sed -i 's/libvirt-python===1.3.0/libvirt-python===3.6.0/' /upper-constraints.txt # Match UCA repo Pike for package libvirt0
 sed -i 's/cryptography===1.1.2/cryptography===1.2.3/' /upper-constraints.txt # Bump version to Mitaka
-sed -i '/aioeventlet===0.4/d' /upper-constraints.txt
+sed -i 's/aioeventlet===0.4/aioeventlet===0.5.2/d' /upper-constraints.txt # Bump version to Newton, used by Glance
 sed -i '/python-congressclient===2015.1.0/d' /upper-constraints.txt
 sed -i "/pysqlite===2.6.3;python_version=='2.7'/d" /upper-constraints.txt
 # Mitaka
-sed -i '/aioeventlet===0.5.1/d' /upper-constraints.txt # NOTE: used by ceilometer, nova
+sed -i 's/libvirt-python===1.3.2/libvirt-python===3.6.0/' /upper-constraints.txt # Match UCA repo Pike for package libvirt0
+sed -i 's/aioeventlet===0.5.1/aioeventlet===0.5.2/d' /upper-constraints.txt # Bump version to Newton, used by ceilometer, nova
 sed -i "/pysqlite===2.8.1;python_version=='2.7'/d" /upper-constraints.txt
+# Newton
+sed -i 's/libvirt-python===2.1.0/libvirt-python===3.6.0/' /upper-constraints.txt # Match UCA repo Pike for package libvirt0
+
 
 # Ensure M2Crypto doesn't need to be built because it can't be built with
 # the default openssl devel distro packages for ubuntu/centos. (This is
