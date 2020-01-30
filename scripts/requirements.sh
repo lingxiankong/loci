@@ -18,6 +18,7 @@ fi
 
 # Remove old versions of python-qpid-proton as these cannot be built in CI
 # anymore
+sed -i "/python-qpid-proton===0.9.1.1;python_version=='2.7'/d" /upper-constraints.txt
 sed -i '/python-qpid-proton===0.10/d' /upper-constraints.txt
 sed -i '/python-qpid-proton===0.14.0/d' /upper-constraints.txt
 
@@ -28,15 +29,21 @@ sed -i '/python-qpid-proton===0.14.0/d' /upper-constraints.txt
 # - I have proposed a list of fix which should make things right in u-c:
 # https://review.opendev.org/#/c/673415/
 # https://review.opendev.org/#/c/673414/
+sed -i '/trollius===2.0/d' /upper-constraints.txt
 sed -i '/trollius===2.1/d' /upper-constraints.txt
 
 # NOTE(dalees): Remove unused and unable to build packages from requirements
 # Kilo
 sed -i '/libvirt-python===1.2.16/d' /upper-constraints.txt
+sed -i '/aioeventlet===0.4/d' /upper-constraints.txt
+sed -i '/cryptography===0.9.1/d' /upper-constraints.txt
+sed -i '/python-congressclient===2015.1.0/d' /upper-constraints.txt
+sed -i "/pysqlite===2.6.3;python_version=='2.7'/d" /upper-constraints.txt
 # Liberty
-sed -i '/libvirt-python===1.3.0/d' /upper-constraints.txt
+sed -i '/libvirt-python===1.3.0/d' /upper-constraints.txt # NOTE: needed for nova, ceilometer(5.3.0)
+sed -i '/cryptography===1.1.2/d' /upper-constraints.txt
 # Mitaka
-sed -i '/aioeventlet===0.5.1/d' /upper-constraints.txt
+sed -i '/aioeventlet===0.5.1/d' /upper-constraints.txt # NOTE: used by ceilometer, nova
 sed -i '/libvirt-python===1.3.2/d' /upper-constraints.txt
 sed -i "/pysqlite===2.8.1;python_version=='2.7'/d" /upper-constraints.txt
 # Newton
