@@ -16,8 +16,9 @@ if (( $(openssl version | awk -F'[ .]' '{print $3}') >= 1 )); then
     sed -i '/python-qpid-proton/d' /upper-constraints.txt
 fi
 
-# Remove python-qpid-proton 0.14.0 as this old version cannot be built in CI
+# Remove old versions of python-qpid-proton as these cannot be built in CI
 # anymore
+sed -i '/python-qpid-proton===0.10/d' /upper-constraints.txt
 sed -i '/python-qpid-proton===0.14.0/d' /upper-constraints.txt
 
 # Remove trollius 2.1 because of multiple problems:
@@ -28,6 +29,18 @@ sed -i '/python-qpid-proton===0.14.0/d' /upper-constraints.txt
 # https://review.opendev.org/#/c/673415/
 # https://review.opendev.org/#/c/673414/
 sed -i '/trollius===2.1/d' /upper-constraints.txt
+
+# NOTE(dalees): Remove unused and unable to build packages from requirements
+# Kilo
+sed -i '/libvirt-python===1.2.16/d' /upper-constraints.txt
+# Liberty
+sed -i '/libvirt-python===1.3.0/d' /upper-constraints.txt
+# Mitaka
+sed -i '/aioeventlet===0.5.1/d' /upper-constraints.txt
+sed -i '/libvirt-python===1.3.2/d' /upper-constraints.txt
+sed -i "/pysqlite===2.8.1;python_version=='2.7'/d" /upper-constraints.txt
+# Newton
+sed -i '/libvirt-python===2.1.0/d' /upper-constraints.txt
 
 # Ensure M2Crypto doesn't need to be built because it can't be built with
 # the default openssl devel distro packages for ubuntu/centos. (This is
