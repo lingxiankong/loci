@@ -26,8 +26,14 @@ PIPBOOTSTRAP=/var/lib/pipbootstrap
 ${TMP_VIRTUALENV} --extra-search-dir=/tmp/wheels ${SETUPTOOLS} ${PIPBOOTSTRAP}
 source ${PIPBOOTSTRAP}/bin/activate
 
+UPPER_CONSTRAINTS_FILE=/tmp/wheels/upper-constraints.txt
+if [[ "${PROJECT}" == "requirements" ]]; then
+    UPPER_CONSTRAINTS_FILE=/upper-constraints.txt
+fi
+
 # Upgrade to the latest version of virtualenv
-pip install --upgrade ${PIP_ARGS} virtualenv
+# virtualenv is also constrainted by uc, so using it here
+pip install --upgrade -c ${UPPER_CONSTRAINTS_FILE} ${PIP_ARGS} virtualenv
 
 # Forget the cached locations of python binaries
 hash -r
