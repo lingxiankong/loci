@@ -74,7 +74,7 @@ requirements_newton:
 
 # No projects: Ocata, Pike.
 
-# Heat, Octavia
+# Octavia
 requirements_queens:
   stage: build_requirements
   script:
@@ -107,7 +107,7 @@ requirements_stein:
       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
     - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
 
-# No projects.
+# Heat
 requirements_train:
   stage: build_requirements
   script:
