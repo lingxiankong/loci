@@ -116,4 +116,4 @@ requirements_train:
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/train
       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rain-ubuntu_xenial
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial
