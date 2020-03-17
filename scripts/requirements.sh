@@ -93,7 +93,7 @@ fi
 # Build all dependencies in parallel. This is safe because we are
 # constrained on the version and we are building with --no-deps
 echo uwsgi enum-compat ${PIP_PACKAGES} | xargs -n1 | split -l1 -a3
-ls -1 | xargs -n1 -P20 -t bash -c 'pip wheel ${PIP_WHEEL_ARGS} --no-deps --wheel-dir / -c /upper-constraints.txt -r $1 || cat $1 >> /failure' _ | tee /tmp/wheels.txt
+ls -1 | xargs -n1 -P20 -t bash -c 'pip wheel ${PIP_WHEEL_ARGS} --no-deps --wheel-dir / -c /upper-constraints.txt -r $1 || cat $1 >> /failure' _ | tee /tmp/wheels.txt | grep -E -v "Ignoring .*: markers '.*' don't match your environment"
 
 # TODO: Improve the failure catching
 if [[ -f /failure ]]; then
