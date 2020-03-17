@@ -10,6 +10,7 @@ services:
 
 before_script:
   - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+  - export BUILD_DATE=$(date -u +'%Y%m%dT%H%M%SZ')
 
 stages:
   - build_base
@@ -21,8 +22,8 @@ loci-base:
   script:
     # Build and push loci-base
     - docker build dockerfiles/ubuntu_xenial
-      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
 
 
 
@@ -36,8 +37,8 @@ requirements_kilo:
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=kilo-eol
       --build-arg DIST_PACKAGES=libvirt-dev
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial-${BUILD_DATE}
 
 # Neutron, Nova
 requirements_liberty:
@@ -47,8 +48,8 @@ requirements_liberty:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=liberty-eol
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial-${BUILD_DATE}
 
 # Keystone, Swift
 requirements_mitaka:
@@ -58,8 +59,8 @@ requirements_mitaka:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=mitaka-eol
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial-${BUILD_DATE}
 
 # Cinder(though codebase is Mitaka, see https://gerrit.dmz.wgtn.cat-it.co.nz/#/c/28399/)
 requirements_newton:
@@ -69,8 +70,8 @@ requirements_newton:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/newton
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial-${BUILD_DATE}
 
 # No projects: Ocata, Pike.
 
@@ -82,8 +83,8 @@ requirements_queens:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/queens
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial-${BUILD_DATE}
 
 # Horizon, Trove
 requirements_rocky:
@@ -93,8 +94,8 @@ requirements_rocky:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/rocky
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial-${BUILD_DATE}
 
 # Magnum, Aodh
 requirements_stein:
@@ -104,8 +105,8 @@ requirements_stein:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/stein
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
 
 # Heat
 requirements_train:
@@ -115,5 +116,5 @@ requirements_train:
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/train
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
