@@ -20,11 +20,14 @@ stages:
 loci-base:
   stage: build_base
   script:
-    # Build and push loci-base
+    # Build ubuntu xenial image and push loci-base
     - docker build dockerfiles/ubuntu_xenial
       --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
     - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
-
+    # Build ubuntu bionic image and push loci-base
+    - docker build dockerfiles/ubuntu_bionic
+      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_bionic-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_bionic-${BUILD_DATE}
 
 
 # Build requirements wheels for each Openstack release we use.
@@ -108,7 +111,7 @@ requirements_stein:
       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
     - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
 
-# Heat
+# Heat, Trove
 requirements_train:
   stage: build_requirements
   script:
@@ -118,3 +121,10 @@ requirements_train:
       --build-arg PROJECT_REF=stable/train
       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
     - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
+    # Build based on Bionic
+    - docker build .
+      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_bionic
+      --build-arg PROJECT=requirements
+      --build-arg PROJECT_REF=stable/train
+      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_bionic-${BUILD_DATE}
+    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_bionic-${BUILD_DATE}
