@@ -21,110 +21,110 @@ loci-base:
   stage: build_base
   script:
     # Build ubuntu xenial image and push loci-base
-    - docker build dockerfiles/ubuntu_xenial
-      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
+    #- docker build dockerfiles/ubuntu_xenial
+    #  --tag ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
+    #- docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
     # Build ubuntu bionic image and push loci-base
     - docker build dockerfiles/ubuntu_bionic
       --tag ${REGISTRY_IMAGE_BASE}:ubuntu_bionic-${BUILD_DATE}
     - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_bionic-${BUILD_DATE}
 
-
-# Build requirements wheels for each Openstack release we use.
-# Ceilometer, Glance
-requirements_kilo:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=kilo-eol
-      --build-arg DIST_PACKAGES=libvirt-dev
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial-${BUILD_DATE}
-
-# Neutron, Nova
-requirements_liberty:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=liberty-eol
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial-${BUILD_DATE}
-
-# Keystone, Swift
-requirements_mitaka:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=mitaka-eol
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial-${BUILD_DATE}
-
-# Cinder(though codebase is Mitaka, see https://gerrit.dmz.wgtn.cat-it.co.nz/#/c/28399/)
-requirements_newton:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=stable/newton
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial-${BUILD_DATE}
-
-# No projects: Ocata, Pike.
-
-# Octavia
-requirements_queens:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=stable/queens
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial-${BUILD_DATE}
-
-# Horizon, Trove
-requirements_rocky:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=stable/rocky
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial-${BUILD_DATE}
-
-# Magnum, Aodh
-requirements_stein:
-  stage: build_requirements
-  script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=stable/stein
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
+      ## Build requirements wheels for each Openstack release we use.
+      ## Ceilometer, Glance
+      #requirements_kilo:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=kilo-eol
+      #      --build-arg DIST_PACKAGES=libvirt-dev
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:kilo-ubuntu_xenial-${BUILD_DATE}
+      #
+      ## Neutron, Nova
+      #requirements_liberty:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=liberty-eol
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:liberty-ubuntu_xenial-${BUILD_DATE}
+      #
+      ## Keystone, Swift
+      #requirements_mitaka:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=mitaka-eol
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:mitaka-ubuntu_xenial-${BUILD_DATE}
+      #
+      ## Cinder(though codebase is Mitaka, see https://gerrit.dmz.wgtn.cat-it.co.nz/#/c/28399/)
+      #requirements_newton:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=stable/newton
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:newton-ubuntu_xenial-${BUILD_DATE}
+      #
+      ## No projects: Ocata, Pike.
+      #
+      ## Octavia
+      #requirements_queens:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=stable/queens
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:queens-ubuntu_xenial-${BUILD_DATE}
+      #
+      ## Horizon, Trove
+      #requirements_rocky:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=stable/rocky
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:rocky-ubuntu_xenial-${BUILD_DATE}
+      #
+      ## Magnum, Aodh
+      #requirements_stein:
+      #  stage: build_requirements
+      #  script:
+      #    - docker build .
+      #      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      #      --build-arg PROJECT=requirements
+      #      --build-arg PROJECT_REF=stable/stein
+      #      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
+      #    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:stein-ubuntu_xenial-${BUILD_DATE}
 
 # Heat, Trove
 requirements_train:
   stage: build_requirements
   script:
-    - docker build .
-      --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
-      --build-arg PROJECT=requirements
-      --build-arg PROJECT_REF=stable/train
-      --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
+      # - docker build .
+      # - --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_xenial
+      # - --build-arg PROJECT=requirements
+      # - --build-arg PROJECT_REF=stable/train
+      # - --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
+      # - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_xenial-${BUILD_DATE}
     # Build based on Bionic
     - docker build .
       --build-arg FROM=${REGISTRY_IMAGE_BASE}:ubuntu_bionic
       --build-arg PROJECT=requirements
       --build-arg PROJECT_REF=stable/train
+      --build-arg PYTHON3=yes
       --tag ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_bionic-${BUILD_DATE}
     - docker push ${REGISTRY_IMAGE_REQUIREMENTS}:train-ubuntu_bionic-${BUILD_DATE}
