@@ -26,8 +26,8 @@ loci-base:
     #- docker push ${REGISTRY_IMAGE_BASE}:ubuntu_xenial-${BUILD_DATE}
     # Build ubuntu bionic image and push loci-base
     - docker build dockerfiles/ubuntu_bionic
-      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_bionic-${BUILD_DATE}
-    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_bionic-${BUILD_DATE}
+      --tag ${REGISTRY_IMAGE_BASE}:ubuntu_bionic
+    - docker push ${REGISTRY_IMAGE_BASE}:ubuntu_bionic
 
       ## Build requirements wheels for each Openstack release we use.
       ## Ceilometer, Glance
